@@ -8,28 +8,37 @@ const urlApi = "https://rickandmortyapi.com/api/character";
 export default function Home() {
   const [character, setCharacter] = useState([]);
   const [filter, setFilter] = useState({});
+  const [loading, setLoading] = useState(true);
 
   function getCharachters() {
-    console.log("istek atildi..");
+    console.log("istek atiliyor..");
+
+    setCharacter([]);
+
+    setLoading(true);
 
     let endpoint = urlApi;
 
     let myFilter = filter;
+
     if (myFilter.gender === "all") {
       delete myFilter["gender"];
     }
     if (myFilter.status === "all") {
       delete myFilter["status"];
     }
+
     let filters = new URLSearchParams(myFilter).toString();
 
     if (filters) {
       endpoint += `?${filters}`;
     }
+
     fetch(`${endpoint}`)
       .then((resp) => resp.json())
       .then((resp) => {
         setCharacter(resp.results);
+        setLoading(false);
       })
       .catch(console.error());
   }
@@ -47,12 +56,14 @@ export default function Home() {
       </li>
     );
   });
-
+  if (loading) {
+    return <div>loading...</div>;
+  }
   return (
     <div>
       <div>
         <h2>Rick and Morty</h2>
-        <form>
+        <form className={"optForm"}>
           <select
             onChange={(e) => {
               setFilter({
@@ -74,7 +85,7 @@ export default function Home() {
               });
             }}
           >
-            <option value="all">All</option>
+            <option value="all">All Status</option>
             <option value="dead">Dead</option>
             <option value="alive">Alive</option>
             <option value="unknown">Unknown</option>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function CharacterDetails({ params: { characterId } }) {
   const [character, setCharacter] = useState({});
@@ -14,7 +14,9 @@ export default function CharacterDetails({ params: { characterId } }) {
         setCharacter(resp);
         setLoading(false);
       })
-      .catch(console.error());
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   useEffect(() => {
